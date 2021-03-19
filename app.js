@@ -20,7 +20,7 @@ const app = new express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
-const PORT = 3006;
+const PORT = process.env.PORT || 3006;
 
 
 app.use(authenticationRoutes);
