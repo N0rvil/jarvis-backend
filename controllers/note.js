@@ -12,6 +12,7 @@ exports.createNote = async (req, res, next) => {
             noteHeader: noteContent.noteHeader,
             note: noteContent.note
         })
+        res.json({ note: 'success' })
  } else {
      res.json({ note: 'err' })
  }
