@@ -50,7 +50,7 @@ exports.register = async (req, res, next) => {
       // };
 
       const sendEmail = (emailToken) => {
-        const url = `http://localhost:3000/login?${emailToken}`;
+        const url = `https://laughing-mahavira-03701d.netlify.app/login?${emailToken}`;
 
           transporter.sendMail({
             to: email,
