@@ -29,9 +29,7 @@ app.use(contentController);
 app.use(noteController);
 app.use(weatherController);
 
-app.get('/', (req, res, next) => {
-  res.render('<h1>Running</h1>')
-})
+
 
 
 
