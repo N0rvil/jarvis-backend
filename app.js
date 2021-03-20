@@ -30,7 +30,7 @@ app.use(noteController);
 app.use(weatherController);
 
 app.get('/', (req, res, next) => {
-  res.console.log('running')
+  res.render('<h1>Running</h1>')
 })
 
 
