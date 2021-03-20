@@ -7,8 +7,6 @@ const axios = require('axios');
 exports.getWeather = (req, res, next) => {
     const lat = req.body.lat
     const lng = req.body.lng
-    console.log(lat)
-    console.log(lng)
 
     // NOT MY CONDE !!!
     englishCityName = (strAccents) => {
