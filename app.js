@@ -29,6 +29,10 @@ app.use(contentController);
 app.use(noteController);
 app.use(weatherController);
 
+app.get('/', (req, res, next) => {
+  res.console.log('running')
+})
+
 
 
 
