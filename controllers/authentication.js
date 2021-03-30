@@ -42,12 +42,6 @@ exports.register = async (req, res, next) => {
         }
       });
 
-      // var mailOptions = {
-      //   from: 'jarvis1332021@gmail.com',
-      //   to: email,
-      //   subject: 'Sending Email using Node.js',
-      //   text: 'That was easy!',
-      // };
 
       const sendEmail = (emailToken) => {
         const url = `https://jarvis-fontend.herokuapp.com/login?${emailToken}`;

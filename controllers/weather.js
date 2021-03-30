@@ -48,14 +48,16 @@ exports.getWeather = (req, res, next) => {
              if (response.error) throw new Error(response.error);
 
              // console.log(response.body.forecast.forecastday) // forecast for 3 days foreward very interesting could be use for weather prediction page
-         
-             res.json({ 
-                town: response.body.location.name,
-                temperature: response.body.current.temp_c,
-                icon: response.body.current.condition.icon,
-                windspeed: response.body.current.wind_kph,
-                pressure: response.body.current.pressure_mb
-            })
+
+            
+                res.json({ 
+                    town: response.body.location.name,
+                    temperature: response.body.current.temp_c,
+                    icon: response.body.current.condition.icon,
+                    windspeed: response.body.current.wind_kph,
+                    pressure: response.body.current.pressure_mb
+                })
+             
          });
      })
      
