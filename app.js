@@ -11,6 +11,7 @@ const contentController = require('./routes/content');
 const noteController = require('./routes/note');
 const weatherController = require('./routes/weather');
 const linksController = require('./routes/links');
+const graphsController = require('./routes/graphs');
 
 const User = require('./models/user');
 const Session = require('./models/session');
@@ -31,6 +32,7 @@ app.use(contentController);
 app.use(noteController);
 app.use(weatherController);
 app.use(linksController);
+app.use(graphsController);
 
 
 
