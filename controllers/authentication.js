@@ -9,6 +9,8 @@ const Session = require('../models/session');
 const saltRounds = 10;
 
 
+
+
 // REGISTER
 exports.register = async (req, res, next) => {
     const username = req.body.username
@@ -44,7 +46,7 @@ exports.register = async (req, res, next) => {
 
 
       const sendEmail = (emailToken) => {
-        const url = `https://jarvis-frontend.herokuapp.com/login?${emailToken}`;
+        const url = `https://jarvis-frontend.herokuapp.com/login?${emailToken}`; //http://localhost:3000/login?${emailToken} // https://jarvis-frontend.herokuapp.com/login?${emailToken}
 
           transporter.sendMail({
             to: email,
@@ -139,19 +141,23 @@ exports.register = async (req, res, next) => {
 }
 
   exports.verifyEmail = async (req, res, next) => { 
-    console.log(req.body.url);
-   const getHash = (str) => {
-       return str.split('?')[1];
+    if(req.body.url === 'https://jarvis-frontend.herokuapp.com/login' || req.body.url === 'https://jarvis-frontend.herokuapp.com/' || req.body.url === 'http://localhost:3000/login' || req.body.url === 'http://localhost:3000/') {
+      return
+    } else {
+      const getHash = (str) => {
+        return str.split('?')[1];
+    }
+   const hash = getHash(req.body.url)
+ 
+    const user = await User.findOne({ where: { registerHash: hash } });
+    if (user === null) {    
+     res.json({ note: 'err' })
+   } else {
+     await User.update({ isValid: true }, { where: { id: user.id } })
+     res.json({ note: 'your email was verified' })
    }
-  const hash = getHash(req.body.url)
-
-   const user = await User.findOne({ where: { registerHash: hash } });
-   if (user === null) {    
-    res.json({ note: 'err' })
-  } else {
-    await User.update({ isValid: true }, { where: { id: user.id } })
-    res.json({ note: 'your email was verified' })
-  }
+    }
+   
 }
       
   
