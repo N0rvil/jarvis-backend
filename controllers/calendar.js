@@ -83,7 +83,7 @@ const daysWithEvents = (events, blockedEvents) => {
         const date = new Date(event.date);
         let year = date.getFullYear();
         let month = date.getMonth()+1;
-        let day = date.getDate();
+        let day = date.getDate()+1; //Before pushing into production add +1 because server have different date propably
 
 
         if (event.repeat === 'norepeat') {
