@@ -1,9 +1,6 @@
 const unirest = require("unirest");
 const axios = require('axios');
 
-
-
-
 exports.getWeather = (req, res, next) => {
     const lat = req.body.lat
     const lng = req.body.lng
@@ -27,10 +24,16 @@ exports.getWeather = (req, res, next) => {
 
      axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=777184c58d364f3fa3c3e21e18f75e27`)
      .then(response => {
-         const town = englishCityName(response.data.results[0].components.town);
 
-
-         var request = unirest("GET", "https://weatherapi-com.p.rapidapi.com/forecast.json");
+         if (response) {
+             let town = '';
+             if(response.data.results[0].components.town) {
+                town = englishCityName(response.data.results[0].components.town);
+             } else {
+                town = englishCityName(response.data.results[0].components.village);
+             }
+            
+            var request = unirest("GET", "https://weatherapi-com.p.rapidapi.com/forecast.json");
 
          request.query({
              "q": town,
@@ -43,13 +46,10 @@ exports.getWeather = (req, res, next) => {
              "useQueryString": true
          });
          
-         
          request.end((response) => {
-             if (response.error) throw new Error(response.error);
-
-             // console.log(response.body.forecast.forecastday) // forecast for 3 days foreward very interesting could be use for weather prediction page
-
-            
+             if (response.error) {
+                console.log(response.error)
+             } else  {
                 res.json({ 
                     town: response.body.location.name,
                     temperature: response.body.current.temp_c,
@@ -57,10 +57,13 @@ exports.getWeather = (req, res, next) => {
                     windspeed: response.body.current.wind_kph,
                     pressure: response.body.current.pressure_mb
                 })
-             
+             }
+             // console.log(response.body.forecast.forecastday) // forecast for 3 days foreward very interesting could be use for weather prediction page                  
          });
+         } else {
+             console.log(response.error)
+         }       
      })
-     
 }
 
 

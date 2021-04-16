@@ -54,17 +54,21 @@ exports.getCryptoData = async (req, res, next) => {
       'x-rapidapi-host': 'coingecko.p.rapidapi.com'
     }
   };
-  
+
   axios.request(options)
   .then(response => {
       let price = response.data[Object.keys(response.data)[0]].slice(-1)[0][1]
-      const oldPrice =  Math.round(response.data[Object.keys(response.data)[0]][0][1] * 100) / 100 
-      const change =  (((price - oldPrice) / oldPrice) * 100).toFixed(2)
+      let oldPrice =  Math.round(response.data[Object.keys(response.data)[0]][0][1] * 100) / 100 
       if (req.body.crypto === 'dogecoin') {
-        price = response.data[Object.keys(response.data)[0]].slice(-1)[0][1].toFixed(5)
+        oldPrice = oldPrice.toFixed(5)
+        price = price.toFixed(5)
       } else {
-        price = response.data[Object.keys(response.data)[0]].slice(-1)[0][1].toFixed(2)
+        oldPrice = oldPrice.toFixed(2)
+        price = price.toFixed(2)
       }
+      const change =  (((price - oldPrice) / oldPrice) * 100).toFixed(2)
+      
+      console.log('crypto fetched')
              
       res.json({ price: price, change: change })
   }).catch(err => { 

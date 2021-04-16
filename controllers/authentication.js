@@ -9,8 +9,6 @@ const Session = require('../models/session');
 const saltRounds = 10;
 
 
-
-
 // REGISTER
 exports.register = async (req, res, next) => {
     const username = req.body.username
@@ -74,7 +72,6 @@ exports.register = async (req, res, next) => {
       }
     }
   };
-
 
   // LOGIN
   exports.login = (req, res, next) =>{

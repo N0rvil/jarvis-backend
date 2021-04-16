@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize = require('../util/database');
 
-const Note = sequelize.define('note', {
+const blockedEvent = sequelize.define('blockedEvent', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -13,15 +13,15 @@ const Note = sequelize.define('note', {
     type: Sequelize.INTEGER,
     allowNull: false
   } ,
-  noteHeader: {
+  eventId: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  } ,
+  date: {
     type: Sequelize.STRING,
     allowNull: false
-  },
-  note: {
-    type: Sequelize.TEXT,
-    allowNull: false
-  },
+  }
 });
 
 
-module.exports = Note;
+module.exports = blockedEvent;
