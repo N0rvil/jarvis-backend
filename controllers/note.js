@@ -20,10 +20,8 @@ exports.createNote = async (req, res, next) => {
  }
 }
 
-exports.getNotes = async (req, res, next) => {
-    const request = req.body
-    
-      if (Object.keys(request).length > 0) { // check if the request with cookie exist
+exports.getNotes = async (req, res, next) => {  
+    if (req.body.loged) { // check if the request with cookie exist
         const userData = JSON.parse(req.body.loged)
         const notes = await Note.findAll({ where: { userId: userData.id } });
         if (notes === null) {
@@ -33,11 +31,12 @@ exports.getNotes = async (req, res, next) => {
         }
         
  } else {
-     res.json({ notes: 'err' })
+     res.json({ note: 'err' })
  }
 }
 
 exports.deleteNote = async (req, res, next) => {
+    if (req.body.cookies.loged) {
     const noteId = req.body.id;
     await Note.destroy({ where: { id: noteId }});
 
@@ -45,7 +44,9 @@ exports.deleteNote = async (req, res, next) => {
     const notes = await Note.findAll({ where: { userId: userData.id } });
 
     res.json({ notes: notes })
-
+    } else {
+        res.json({ note: 'err'})
+    }
 }
 
 exports.getNoteContent = async (req, res, next) => {
@@ -57,6 +58,7 @@ exports.getNoteContent = async (req, res, next) => {
 
 
 exports.updateNote = async (req, res, next) => {
+    if (req.body.cookies.loged) {
     const noteId = req.body.note.noteId;
     await Note.update(
         { noteHeader: req.body.note.noteHeader, note: req.body.note.note },
@@ -67,4 +69,7 @@ exports.updateNote = async (req, res, next) => {
     const notes = await Note.findAll({ where: { userId: userData.id } });
 
     res.json({ notes: notes })
+    } else {
+        res.json({ note: 'err'})
+    }
 }

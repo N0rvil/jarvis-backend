@@ -83,7 +83,7 @@ const daysWithEvents = (events, blockedEvents) => {
         const date = new Date(event.date);
         let year = date.getFullYear();
         let month = date.getMonth()+1;
-        let day = date.getDate()+1; //Before pushing into production add +1 because server have different date propably
+        let day = date.getDate(); //Before pushing into production add +1 because server have different date propably // let day = date.getDate()+1;
 
 
         if (event.repeat === 'norepeat') {
@@ -158,17 +158,22 @@ const daysWithEvents = (events, blockedEvents) => {
 }
 
 exports.getEvents = async (req, res, next) => {
-    const userData = JSON.parse(req.body.cookies.loged);
-    const currentDate = new Date(req.body.date);
-    const customDate = customdate(currentDate);
+    if (req.body.cookies.loged) {
+        const userData = JSON.parse(req.body.cookies.loged);
+        const currentDate = new Date(req.body.date);
+        const customDate = customdate(currentDate);
 
-    const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
-    const events = await Event.findAll({ where: { userId: userData.id } });
-        
-    res.json({ events: sendEvents(currentDate, events, blockedEvents)}); 
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const events = await Event.findAll({ where: { userId: userData.id } });
+
+        res.json({ events: sendEvents(currentDate, events, blockedEvents)}); 
+    } else {
+        res.json({ note: 'err' })
+    }
 }
 
 exports.createEvent = async (req, res, next) => {
+    if (req.body.cookies.loged) {
     const userData = JSON.parse(req.body.cookies.loged);
     const date = req.body.date
     const eventName = req.body.eventName
@@ -194,52 +199,65 @@ exports.createEvent = async (req, res, next) => {
         const events = await Event.findAll({ where: { userId: userData.id }}); 
        
         res.json({ events: sendEvents(currentDate, events, blockedEvents), note: 'successfuly created' ,daysWithEvents: daysWithEvents(events, blockedEvents)});
+    } else {
+        res.json({ note: 'err' })
+    }
 }
 
 exports.deleteEvent = async (req, res, next) => {
-    const userData = JSON.parse(req.body.cookies.loged);
-    const currentDate = new Date(req.body.date);
-    const customDate = customdate(currentDate);
+    if (req.body.cookies.loged) {
+        const userData = JSON.parse(req.body.cookies.loged);
+        const currentDate = new Date(req.body.date);
+        const customDate = customdate(currentDate);
 
-    await Event.destroy({ where: { id: req.body.eventId }});
-    await BlockedEvent.destroy({ where: { eventId: req.body.eventId } }); ////////////
+        await Event.destroy({ where: { id: req.body.eventId }});
+        await BlockedEvent.destroy({ where: { eventId: req.body.eventId } }); ////////////
 
 // this have to be called on last place because if not it will not response with the new events but only wiht the old ones
-    const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
-    const events = await Event.findAll({ where: { userId: userData.id }}); 
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const events = await Event.findAll({ where: { userId: userData.id }}); 
    
-    res.json({ events: sendEvents(currentDate, events, blockedEvents) ,daysWithEvents: daysWithEvents(events, blockedEvents)});
+        res.json({ events: sendEvents(currentDate, events, blockedEvents) ,daysWithEvents: daysWithEvents(events, blockedEvents)});
+    } else {
+        res.json({ note: 'err' })
+    }
 } 
 
 exports.deleteEventOnDate = async (req, res, next) => { // function that block repeated events on specific date
-    const userData = JSON.parse(req.body.cookies.loged);
-    const eventId = req.body.eventId
-    const currentDate = new Date(req.body.date);
-    const customDate = customdate(currentDate);
+    if (req.body.cookies.loged) {
+        const userData = JSON.parse(req.body.cookies.loged);
+        const eventId = req.body.eventId
+        const currentDate = new Date(req.body.date);
+        const customDate = customdate(currentDate);
 
-    await BlockedEvent.create({
-        userId: userData.id,
-        eventId,
-        date: customDate,
-    });
+        await BlockedEvent.create({
+            userId: userData.id,
+            eventId,
+            date: customDate,
+        });
 
-    const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
-    const events = await Event.findAll({ where: { userId: userData.id }});
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const events = await Event.findAll({ where: { userId: userData.id }});
 
-    res.json({ events: sendEvents(currentDate, events, blockedEvents) ,daysWithEvents: daysWithEvents(events, blockedEvents)});
+        res.json({ events: sendEvents(currentDate, events, blockedEvents) ,daysWithEvents: daysWithEvents(events, blockedEvents)});
+    } else {
+        res.json({ note: 'err' })
+    }
 }
 
 exports.getDaysWithEvents = async (req, res, next) => {
-    const userData = JSON.parse(req.body.cookies.loged);
-    const currentDate = new Date(req.body.date); 
-    const customDate = customdate(currentDate);
+    if (req.body.cookies.loged) {
+    	const userData = JSON.parse(req.body.cookies.loged);
 
-    // Figure out how to return all the dates where the events are and send it back 
-    //best will be create function that we can use because we need to send it back for all others changes 
+    	// Figure out how to return all the dates where the events are and send it back 
+    	//best will be create function that we can use because we need to send it back for all others changes 
 
-    const events = await Event.findAll({ where: { userId: userData.id }});
-    const blockedEvents = await BlockedEvent.findAll({ where: { userId: userData.id } });
-    
-    res.json({ daysWithEvents: daysWithEvents(events, blockedEvents)})
+    	const events = await Event.findAll({ where: { userId: userData.id }});
+    	const blockedEvents = await BlockedEvent.findAll({ where: { userId: userData.id } });
+    	
+    	res.json({ daysWithEvents: daysWithEvents(events, blockedEvents)})
+    } else {
+        res.json({ note: 'err' });
+    }
 }
 

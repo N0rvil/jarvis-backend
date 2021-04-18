@@ -44,7 +44,7 @@ exports.register = async (req, res, next) => {
 
 
       const sendEmail = (emailToken) => {
-        const url = `https://jarvis-frontend.herokuapp.com/login?${emailToken}`; //http://localhost:3000/login?${emailToken} // https://jarvis-frontend.herokuapp.com/login?${emailToken}
+        const url = `https://jarvis-frontend.herokuapp.com/login?${emailToken}`; // http://localhost:3000/login?${emailToken} // https://jarvis-frontend.herokuapp.com/login?${emailToken}
 
           transporter.sendMail({
             to: email,
