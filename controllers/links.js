@@ -13,7 +13,6 @@ exports.createCategory = async (req, res, next) => {
             category: category,
         })
         const categories = await Category.findAll({ where: { userId: userData.id } });
-
         res.json({ categories: categories })
     }
 }
@@ -27,9 +26,11 @@ exports.deleteCategory = async (req, res, next) => {
 
     const categories = await Category.findAll({ where: { userId: userData.id } });
 
-    res.json({ categories: categories })
-    
-
+    if (categories.length === 0) {
+        res.json({ categories: ['no-links'] })
+    } else {
+        res.json({ categories: categories })
+    }
 }
 
 exports.getCategories = async (req, res, next) => {
@@ -38,7 +39,11 @@ exports.getCategories = async (req, res, next) => {
       if (Object.keys(request).length > 0) { // check if the request with cookie exist
         const userData = JSON.parse(req.body.loged)
         const categories = await Category.findAll({ where: { userId: userData.id } });
-        res.json({ categories: categories })
+        if (categories.length === 0) {
+            res.json({ categories: ['no-links'] })
+        } else {
+            res.json({ categories: categories })
+        }
     }
 }
 
