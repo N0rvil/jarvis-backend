@@ -67,8 +67,6 @@ exports.getCryptoData = async (req, res, next) => {
         price = price.toFixed(2)
       }
       const change =  (((price - oldPrice) / oldPrice) * 100).toFixed(2)
-      
-      console.log('crypto fetched')
              
       res.json({ price: price, change: change })
   }).catch(err => { 

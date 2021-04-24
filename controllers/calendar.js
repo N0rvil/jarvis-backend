@@ -86,9 +86,7 @@ const daysWithEvents = (events, blockedEvents) => {
 
 
         if (event.repeat === 'norepeat') {
-            if (check(blockedEvents, `${day}.${month}.${year}`)[0] === false || check(blockedEvents, `${day}.${month}.${year}`) === false) {
-                eventsDatesList.push(`${day}.${month}.${year}`);
-            }         
+            eventsDatesList.push(`${day}.${month}.${year}`);         
         } else if (event.repeat === 'weekly') {
             let count = 0;
             for (count = 0; count < 500; count++) {
@@ -160,9 +158,9 @@ exports.getEvents = async (req, res, next) => {
     if (req.body.cookies.loged) {
         const userData = JSON.parse(req.body.cookies.loged);
         const currentDate = new Date(req.body.date);
-        const customDate = customdate(currentDate);
+        // const customDate = customdate(currentDate);
 
-        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id } });
 
         res.json({ events: sendEvents(currentDate, events, blockedEvents)}); 
@@ -182,7 +180,7 @@ exports.createEvent = async (req, res, next) => {
     const to = req.body.to 
 
     const currentDate = new Date(req.body.date);
-    const customDate = customdate(currentDate);
+    // const customDate = customdate(currentDate);
 
         await Event.create({
             userId: userData.id,
@@ -194,7 +192,7 @@ exports.createEvent = async (req, res, next) => {
             to: to
         });
         
-        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id }}); 
        
         res.json({ events: sendEvents(currentDate, events, blockedEvents), note: 'successfuly created' ,daysWithEvents: daysWithEvents(events, blockedEvents)});
@@ -207,13 +205,13 @@ exports.deleteEvent = async (req, res, next) => {
     if (req.body.cookies.loged) {
         const userData = JSON.parse(req.body.cookies.loged);
         const currentDate = new Date(req.body.date);
-        const customDate = customdate(currentDate);
+        // const customDate = customdate(currentDate);
 
         await Event.destroy({ where: { id: req.body.eventId }});
         await BlockedEvent.destroy({ where: { eventId: req.body.eventId } }); ////////////
 
 // this have to be called on last place because if not it will not response with the new events but only wiht the old ones
-        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id }}); 
    
         res.json({ events: sendEvents(currentDate, events, blockedEvents) ,daysWithEvents: daysWithEvents(events, blockedEvents)});
@@ -235,7 +233,7 @@ exports.deleteEventOnDate = async (req, res, next) => { // function that block r
             date: customDate,
         });
 
-        const blockedEvents = await BlockedEvent.findAll({ where: { date: customDate } });
+        const blockedEvents = await BlockedEvent.findAll({ where: { date: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id }});
 
         res.json({ events: sendEvents(currentDate, events, blockedEvents) ,daysWithEvents: daysWithEvents(events, blockedEvents)});
