@@ -36,7 +36,7 @@ app.use(linksController);
 app.use(graphsController);
 app.use(calendarController);
 
-
+// recreate this for better using // create all conections
 
 User.hasMany(Session);
 User.hasMany(Note);

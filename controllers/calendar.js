@@ -63,7 +63,7 @@ const sendEvents = (date, events, blockedEvents) => {
 
 const daysWithEvents = (events, blockedEvents) => {
     const eventsDatesList = [];
-
+    
     const check = (blockedEv, customDate) => {
         if (blockedEv.length > 0) {
             return blockedEv.map((blockedEvent) => { 
@@ -77,8 +77,7 @@ const daysWithEvents = (events, blockedEvents) => {
             return false
         }   
     }
-
-    
+  
     events.map((event, i) => {
         const date = new Date(event.date);
         let year = date.getFullYear();
