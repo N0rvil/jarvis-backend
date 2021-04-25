@@ -15,11 +15,11 @@ const sendEvents = (date, events, blockedEvents) => {
     const dayInMonth = currentDate.getDate(); // This is number of the day in month  1 - 31
     const day = currentDate.getDay(); // This is number of the day in week 0 - 6
     const customDate = customdate(currentDate);
-    const eventsList = [];      
-    
+    const eventsList = [];     
+
     const check = (blockedEv, event) => {
         if (blockedEv.length > 0) {
-            return blockedEv.map((blockedEvent) => { 
+            return  blockedEv.map((blockedEvent) => { 
                 if(blockedEvent.date === customDate && blockedEvent.eventId === event.id) {
                     return true
                 } else {
@@ -38,6 +38,7 @@ const sendEvents = (date, events, blockedEvents) => {
             const eventDayInMonth = fullEventDate.getDate();
             const eventDay = fullEventDate.getDay();
             const eventDate = `${eventDayInMonth}.${eventMonth+1}.${eventYear}`;
+            
 
             if (check(blockedEvents, event)[0] === false || check(blockedEvents, event) === false) {
                 if (eventDate === customDate) {
@@ -159,6 +160,7 @@ exports.getEvents = async (req, res, next) => {
         const userData = JSON.parse(req.body.cookies.loged);
         const currentDate = new Date(req.body.date);
         // const customDate = customdate(currentDate);
+        
 
         const blockedEvents = await BlockedEvent.findAll({ where: { date: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id } });
