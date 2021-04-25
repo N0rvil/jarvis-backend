@@ -165,7 +165,7 @@ exports.getEvents = async (req, res, next) => {
         const blockedEvents = await BlockedEvent.findAll({ where: { date: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id } });
 
-        res.json({ events: sendEvents(currentDate, events, blockedEvents)}); 
+        res.json({ events: await sendEvents(currentDate, events, blockedEvents)}); 
     } else {
         res.json({ note: 'err' })
     }
