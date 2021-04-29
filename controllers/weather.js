@@ -5,7 +5,6 @@ exports.getWeather = (req, res, next) => {
     const lat = req.body.lat
     const lng = req.body.lng
 
-    // NOT MY CONDE !!!
     englishCityName = (strAccents) => {
         var strAccents = strAccents.split('');
         var strAccentsOut = new Array();
@@ -24,13 +23,14 @@ exports.getWeather = (req, res, next) => {
 
      axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=777184c58d364f3fa3c3e21e18f75e27`)
      .then(response => {
-
          if (response) {
              let town = '';
-             if(response.data.results[0].components.town) {
-                town = englishCityName(response.data.results[0].components.town);
+             if(response.data.results[0].components.city) {
+                console.log(response)
+                town = response.data.results[0].components.city
+                
              } else {
-                town = englishCityName(response.data.results[0].components.village);
+                town = response.data.results[0].components.village
              }
             
             var request = unirest("GET", "https://weatherapi-com.p.rapidapi.com/forecast.json");
