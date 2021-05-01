@@ -39,7 +39,6 @@ const sendEvents = (date, events, blockedEvents) => {
             const eventDay = fullEventDate.getDay();
             const eventDate = `${eventDayInMonth}.${eventMonth+1}.${eventYear}`;
             
-
             if (check(blockedEvents, event)[0] === false || check(blockedEvents, event) === false) {
                 if (eventDate === customDate) {
                     eventsList.push(event);       
@@ -56,8 +55,7 @@ const sendEvents = (date, events, blockedEvents) => {
                 } else if (event.repeat === 'yearly' && eventDayInMonth === dayInMonth && eventMonth === month && year >= eventYear) {
                     eventsList.push(event);
                 }               
-            }
-                                               
+            }                                     
         })
     return  eventsList
 }
@@ -165,7 +163,7 @@ exports.getEvents = async (req, res, next) => {
         const blockedEvents = await BlockedEvent.findAll({ where: { userId: userData.id } });
         const events = await Event.findAll({ where: { userId: userData.id } });
 
-        res.json({ events: await sendEvents(currentDate, events, blockedEvents)}); 
+        res.json({ events: sendEvents(currentDate, events, blockedEvents)}); 
     } else {
         res.json({ note: 'err' })
     }

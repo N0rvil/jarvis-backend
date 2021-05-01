@@ -24,45 +24,58 @@ exports.getWeather = (req, res, next) => {
      axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=777184c58d364f3fa3c3e21e18f75e27`)
      .then(response => {
          if (response) {
-             let town = '';
-             if(response.data.results[0].components.city) {
-                console.log(response)
-                town = response.data.results[0].components.city
-                
-             } else {
-                town = response.data.results[0].components.village
-             }
-            
+            let town = '';
+            if(response.data.results[0].components.city) {
+               town = response.data.results[0].components.city
+               
+            } else {
+               town = response.data.results[0].components.village
+            }
+        
             var request = unirest("GET", "https://weatherapi-com.p.rapidapi.com/forecast.json");
 
-         request.query({
-             "q": town,
-             "days": "3"
-         });
-         
-         request.headers({
-             "x-rapidapi-key": "31b538c6cdmsh1d0f0d9c7588b1dp11f8d7jsn9f3f66e3ebc1",
-             "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
-             "useQueryString": true
-         });
-         
-         request.end((response) => {
-             if (response.error) {
-                console.log(response.error)
-             } else  {
+        request.query({
+            "q": town,
+            "days": "3"
+        });
+        
+        request.headers({
+            "x-rapidapi-key": "31b538c6cdmsh1d0f0d9c7588b1dp11f8d7jsn9f3f66e3ebc1",
+            "x-rapidapi-host": "weatherapi-com.p.rapidapi.com",
+            "useQueryString": true
+        });
+        
+        request.end((response) => {
+            if (response.error) {
+               console.log(response.error)
+               res.json({  
+                   town: 'no data',
+                   temperature: 'no data',
+                   icon: 'no data',
+                   windspeed: 'no data',
+                   pressure: 'no data'
+               })
+            } else  {
                 res.json({ 
-                    town: response.body.location.name,
-                    temperature: response.body.current.temp_c,
-                    icon: response.body.current.condition.icon,
-                    windspeed: response.body.current.wind_kph,
-                    pressure: response.body.current.pressure_mb
-                })
-             }
-             // console.log(response.body.forecast.forecastday) // forecast for 3 days foreward very interesting could be use for weather prediction page                  
-         });
-         } else {
-             console.log(response.error)
-         }       
+                   town: response.body.location.name,
+                   temperature: response.body.current.temp_c,
+                   icon: response.body.current.condition.icon,
+                   windspeed: response.body.current.wind_kph,
+                   pressure: response.body.current.pressure_mb
+               })
+            }
+            // console.log(response.body.forecast.forecastday) // forecast for 3 days foreward very interesting could be use for weather prediction page                  
+        });
+        } else {
+            console.log(response.error)
+            res.json({  
+                town: 'no data',
+                temperature: 'no data',
+                icon: 'no data',
+                windspeed: 'no data',
+                pressure: 'no data'
+            })
+        }       
      })
 }
 

@@ -8,6 +8,24 @@ const Session = require('../models/session');
 
 const saltRounds = 10;
 
+exports.checkLogin = async (req, res, next) => {
+  if (req.body.hasOwnProperty('loged')) {
+    const userData = JSON.parse(req.body.loged) 
+    const session = await Session.findOne({ where: { userId: userData.id, hash: userData.hash, time: userData.time } });
+    const user = await User.findOne({ where: {id: userData.id} })
+    const admin = user.admin
+
+  if (session === null) {
+   
+    res.json({ note: 'err' })
+  } else {
+  res.json({ note: 'verified', admin })
+}    
+  } else {
+    res.json({ note: 'err' })
+  }
+}
+
 
 // REGISTER
 exports.register = async (req, res, next) => {
@@ -88,8 +106,10 @@ exports.register = async (req, res, next) => {
           } else if (user.isValid === false) {
             res.json({ note: 'no email verification' })
           } else {
-            
-            bcrypt.compare(loginPassword, user.password, async function(err, response) {
+            if (user.isBanned === true) {
+              res.json({ note: 'user is banned'})
+            } else {
+              bcrypt.compare(loginPassword, user.password, async function(err, response) {
               if (response === true) {
 
                 const time = new Date().getTime(); // time
@@ -114,6 +134,9 @@ exports.register = async (req, res, next) => {
               }
             });
           }
+            }
+            
+            
       } 
 
       isUserValid();
@@ -121,21 +144,6 @@ exports.register = async (req, res, next) => {
     .catch(err => console.log(err))
   }
 
-  exports.checkLogin = async (req, res, next) => {
-        if (req.body.hasOwnProperty('loged')) {
-          const cookie = JSON.parse(req.body.loged) 
-          const session = await Session.findOne({ where: { userId: cookie.id, hash: cookie.hash, time: cookie.time } });
-    
-        if (session === null) {
-         
-          res.json({ note: 'err' })
-        } else {
-        res.json({ note: 'verified' })
-      }    
-        } else {
-          res.json({ note: 'err' })
-        }
-}
 
   exports.verifyEmail = async (req, res, next) => { 
     if(req.body.url === 'https://jarvis-frontend.herokuapp.com/login' || req.body.url === 'https://jarvis-frontend.herokuapp.com/' || req.body.url === 'http://localhost:3000/login' || req.body.url === 'http://localhost:3000/') {

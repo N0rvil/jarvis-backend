@@ -26,6 +26,10 @@ const User = sequelize.define('users', {
     type: Sequelize.BOOLEAN,
     defaultValue: false
   },
+  banned: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  },
   registerHash: {
     type: Sequelize.STRING,
     allowNull: false

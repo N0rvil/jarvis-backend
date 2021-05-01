@@ -13,6 +13,7 @@ const weatherController = require('./routes/weather');
 const linksController = require('./routes/links');
 const graphsController = require('./routes/graphs');
 const calendarController = require('./routes/calendar');
+const adminController = require('./routes/admin');
 
 const User = require('./models/user');
 const Session = require('./models/session');
@@ -35,12 +36,14 @@ app.use(weatherController);
 app.use(linksController);
 app.use(graphsController);
 app.use(calendarController);
+app.use(adminController);
 
 // recreate this for better using // create all conections
 
-User.hasMany(Session);
-User.hasMany(Note);
-User.hasMany(Category);
+User.hasMany(Session, {foreignKey: 'userId'});
+Session.belongsTo(User, {foreignKey: 'userId'})
+User.hasMany(Note, {foreignKey: 'userId'});
+User.hasMany(Category, {foreignKey: 'userId'});
     
 sequelize
   //.sync({ force: true })
