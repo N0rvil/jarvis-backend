@@ -81,14 +81,12 @@ const daysWithEvents = (events, blockedEvents) => {
         const date = new Date(event.date);
         let year = date.getFullYear();
         let month = date.getMonth()+1;
-        let day = date.getDate(); //Before pushing into production add +1 because server have different date propably // let day = date.getDate()+1;
+        let day = date.getDate()+1; //Before pushing into production add +1 because server have different date propably // let day = date.getDate()+1;
 
 
         if (event.repeat === 'norepeat') {
             eventsDatesList.push(`${day}.${month}.${year}`);  
-            console.log(`${day}.${month}.${year}`)
             if (`${day}.${month}.${year}` === `${1}.${month}.${year}`) {
-                console.log(`${day}.${month}.${year}`)
                 eventsDatesList.push(`${day}.${month}.${year}`); 
             }      
         } else if (event.repeat === 'weekly') {
