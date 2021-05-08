@@ -85,7 +85,12 @@ const daysWithEvents = (events, blockedEvents) => {
 
 
         if (event.repeat === 'norepeat') {
-            eventsDatesList.push(`${day}.${month}.${year}`);         
+            eventsDatesList.push(`${day}.${month}.${year}`);  
+            console.log(`${day}.${month}.${year}`)
+            if (`${day}.${month}.${year}` === `${1}.${month}.${year}`) {
+                console.log(`${day}.${month}.${year}`)
+                eventsDatesList.push(`${day}.${month}.${year}`); 
+            }      
         } else if (event.repeat === 'weekly') {
             let count = 0;
             for (count = 0; count < 500; count++) {
