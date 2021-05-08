@@ -86,9 +86,26 @@ const daysWithEvents = (events, blockedEvents) => {
 
         if (event.repeat === 'norepeat') {
             eventsDatesList.push(`${day}.${month}.${year}`);  
-            if (`${day}.${month}.${year}` === `${32}.${month}.${year}`) {
-                eventsDatesList.push(`${1}.${month+1}.${year}`); 
-            }      
+            if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12 ) {
+                if (`${day}.${month}.${year}` === `${32}.${month}.${year}`) {
+                    eventsDatesList.push(`${1}.${month+1}.${year}`); 
+                } 
+               } else if (month === 2) {
+                   if (year % 4 === 0) {
+                    if (`${day}.${month}.${year}` === `${30}.${month}.${year}`) {
+                        eventsDatesList.push(`${1}.${month+1}.${year}`); 
+                    } 
+                   } else {
+                    if (`${day}.${month}.${year}` === `${29}.${month}.${year}`) {
+                        eventsDatesList.push(`${1}.${month+1}.${year}`); 
+                    } 
+                   }
+               } else if (month === 4 || month === 6 || month === 9 || month === 11) {
+                if (`${day}.${month}.${year}` === `${31}.${month}.${year}`) {
+                    eventsDatesList.push(`${1}.${month+1}.${year}`); 
+                } 
+               } 
+                 
         } else if (event.repeat === 'weekly') {
             let count = 0;
             for (count = 0; count < 500; count++) {
